@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "RSS Feeds";
+}
+@model List<RSSFeedItem>;
+
+
+<div class="row justify-content-center form-group">
+    <input type="button" class="btn btn-primary add-feed-btn" asp-action="Subscription" value="Add a Feed" onclick="location.href='@Url.Action("Subscription")'" />
+</div>
+@if (!Model.Any())
+{
+    <div class="text-center text-background">
+        <h1>It looks like you haven't added any RSS Feeds yet</h1>
+        <h4>Click on the button above to get started.</h4>
+    </div>
+}
+else
+{
+    <div class="col">
+        <div class="dropdown flex-sm-row-reverse">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="sort-by" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Sort by
+            </button>
+            <div class="dropdown-menu" aria-labelledby="sort-by">
+                @Html.ActionLink("Publish Date", "Feed", new { sortBy = ViewBag.SortingDate }, new { @class = "dropdown-item" })
+                @Html.ActionLink("Title", "Feed", new { sortBy = ViewBag.SortingTitle }, new { @class = "dropdown-item" })
+                @Html.ActionLink("Description", "Feed", new { sortBy = ViewBag.SortingDesc }, new { @class = "dropdown-item" })
+            </div>
+        </div>
+    @foreach(var item in Model)
+    {
+        <div class="row border rounded  feed-item">
+            <a class="col-3" href="@(item.ItemSrc == null ? "" : item.ItemSrc.ToString())">
+                <img width="256" height="256" src="@(item.ImageSrc == null ? "http://icons.iconarchive.com/icons/danleech/simple/1024/rss-icon.png" : item.ImageSrc.ToString())" alt="RSS Feed Item Image" />
+            </a>
+            <div class="col-9">
+                <h4 class="feed-item-title"><a class="feed-item-link" href="@(item.ItemSrc == null ? "" : item.ItemSrc.ToString())">@item.Title</a></h4>
+                <p>Published: @item.PublishDate.ToString("g")</p>
+                <p>@item.Description</p>
+            </div>
+        </div>
+    }
+    </div>
+}
